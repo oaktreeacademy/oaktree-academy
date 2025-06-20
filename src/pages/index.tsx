@@ -228,7 +228,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 overflow-x-hidden">
       <Navbar />
       
       {/* HERO SECTION - Massive Background Image Style */}
@@ -240,6 +240,7 @@ export default function Home() {
             alt="Security Header" 
             fill 
             priority
+            sizes="100vw"
             className="object-cover w-full h-full" 
           />
           {/* Overlay for readability */}
@@ -534,108 +535,50 @@ export default function Home() {
         </div>
       </section>
 
-      {/* TRAINERS & REVIEWS SECTION */}
-      <section className="bg-gradient-to-br from-blue-50 to-white py-16 px-4 border-b border-blue-100">
-        <div className="max-w-3xl mx-auto text-center mb-10">
-          <h2 className="text-4xl font-extrabold text-blue-900 mb-2">Meet our security trainers</h2>
-          <p className="text-lg text-blue-800 mb-6">Real-world expertise to get you licensed and job-ready.</p>
-        </div>
-        <div className="max-w-xl mx-auto flex flex-col items-center">
-          <motion.div
-            key={currentInstructor}
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -40 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="relative w-full bg-white rounded-2xl shadow-lg p-8 flex flex-col items-center border border-blue-100"
-          >
-            <Image src={instructors[currentInstructor].image} alt={instructors[currentInstructor].name} width={140} height={140} className="rounded-full object-cover mb-4 border-4 border-blue-200" />
-            <div className="font-bold text-blue-900 text-2xl mb-1">{instructors[currentInstructor].name}</div>
-            <div className="text-blue-700 text-base mb-2">{instructors[currentInstructor].title}</div>
-          </motion.div>
-          <div className="flex justify-between items-center w-full mt-6">
-            <button
-              className="p-2 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-700 transition"
-              onClick={() => setCurrentInstructor((currentInstructor - 1 + instructors.length) % instructors.length)}
-              aria-label="Previous trainer"
+      {/* MEET OUR TRAINERS SECTION */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-2">Meet Our Security Trainers</h2>
+          <p className="text-center text-gray-600 mb-10 max-w-2xl mx-auto">Our certified instructors are industry experts dedicated to providing the highest quality security training.</p>
+          
+          <div className="relative w-full max-w-6xl mx-auto">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentInstructor}
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
+                transition={{ duration: 0.5 }}
+                className="flex justify-center"
+              >
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-8 w-full">
+                  {instructors.slice(currentInstructor, currentInstructor + 3).map((instructor, index) => (
+                    <div key={index} className="text-center flex-shrink-0">
+                      <div className="relative w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden shadow-lg">
+                        <Image src={instructor.image} alt={instructor.name} fill sizes="128px" className="object-cover" />
+                      </div>
+                      <h3 className="font-bold text-lg text-gray-800">{instructor.name}</h3>
+                      <p className="text-gray-500">{instructor.title}</p>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            </AnimatePresence>
+            
+            <button 
+              onClick={() => setCurrentInstructor(prev => (prev - 1 + instructors.length) % instructors.length)}
+              className="absolute top-1/2 -translate-y-1/2 left-0 -translate-x-4 bg-white/50 backdrop-blur-sm rounded-full p-2 text-gray-700 hover:bg-white transition shadow-md"
             >
               <FaChevronLeft />
             </button>
-            <div className="flex gap-2">
-              {instructors.map((_, idx) => (
-                <button
-                  key={idx}
-                  className={`w-3 h-3 rounded-full ${idx === currentInstructor ? 'bg-blue-600' : 'bg-blue-200'} transition`}
-                  onClick={() => setCurrentInstructor(idx)}
-                  aria-label={`Go to trainer ${idx + 1}`}
-                />
-              ))}
-            </div>
-            <button
-              className="p-2 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-700 transition"
-              onClick={() => setCurrentInstructor((currentInstructor + 1) % instructors.length)}
-              aria-label="Next trainer"
+            <button 
+              onClick={() => setCurrentInstructor(prev => (prev + 1) % instructors.length)}
+              className="absolute top-1/2 -translate-y-1/2 right-0 translate-x-4 bg-white/50 backdrop-blur-sm rounded-full p-2 text-gray-700 hover:bg-white transition shadow-md"
             >
               <FaChevronRight />
             </button>
           </div>
-          <button
-            className="mt-8 bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-lg shadow transition"
-            onClick={() => setShowAllTrainers(true)}
-          >
-            View all trainers
-          </button>
         </div>
-        <AnimatePresence>
-          {showAllTrainers && (
-            <motion.div
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              <motion.div
-                className="bg-white rounded-2xl shadow-2xl p-8 max-w-5xl w-full relative overflow-y-auto"
-                style={{ maxHeight: '90vh' }}
-                initial={{ scale: 0.85, y: 40, opacity: 0 }}
-                animate={{ scale: 1, y: 0, opacity: 1 }}
-                exit={{ scale: 0.85, y: 40, opacity: 0 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              >
-                <button
-                  className="absolute top-4 right-4 text-2xl text-gray-400 hover:text-gray-700 font-bold"
-                  onClick={() => setShowAllTrainers(false)}
-                  aria-label="Close"
-                >
-                  &times;
-                </button>
-                <h3 className="text-2xl font-bold text-blue-900 mb-6 text-center">All Trainers</h3>
-                <motion.div
-                  className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
-                  initial="hidden"
-                  animate="visible"
-                  variants={{ visible: { transition: { staggerChildren: 0.13 } }, hidden: {} }}
-                >
-                  {instructors.map((trainer, idx) => (
-                    <motion.div
-                      key={trainer.name}
-                      className="flex flex-col items-center bg-blue-50 rounded-2xl p-6 shadow-lg border border-blue-100 hover:shadow-2xl transition group"
-                      initial={{ opacity: 0, scale: 0.85, y: 30 }}
-                      animate={{ opacity: 1, scale: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.85, y: 30 }}
-                      transition={{ type: 'spring', stiffness: 250, damping: 22 }}
-                      whileHover={{ scale: 1.04, y: -6, boxShadow: '0 8px 32px 0 rgba(31,38,135,0.18)' }}
-                    >
-                      <Image src={trainer.image} alt={trainer.name} width={100} height={100} className="rounded-full object-cover mb-3 border-4 border-blue-200 group-hover:border-blue-400 transition" />
-                      <div className="font-bold text-blue-900 text-lg mb-1 text-center">{trainer.name}</div>
-                      <div className="text-blue-700 text-sm mb-2 text-center">{trainer.title}</div>
-                    </motion.div>
-                  ))}
-                </motion.div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </section>
 
       {/* GOOGLE REVIEWS SECTION */}

@@ -101,61 +101,63 @@ export default function Navbar() {
   return (
     <div className="relative" ref={dropdownRef}>
       {/* Main Navbar */}
-      <nav className="bg-white text-[#232328] px-3 py-2 flex items-center justify-between shadow-md sticky top-0 z-50">
+      <nav className="bg-white text-[#232328] px-4 sm:px-6 py-3 flex items-center justify-between shadow-md sticky top-0 z-50">
         {/* Logo */}
-        <div className="flex items-center">
+        <div className="flex items-center flex-shrink-0">
           <Link href="/" className="flex items-center space-x-2">
-            <Image src="/assets/logo.png" alt="Oaktree Academy Logo" width={28} height={28} className="rounded-full h-7 w-7" />
-            <span className="font-bold text-sm hidden xs:block">OAKTREE</span>
+            <Image src="/assets/logo.png" alt="Oaktree Academy Logo" width={32} height={32} className="rounded-full h-8 w-8 sm:h-10 sm:w-10" />
+            <span className="font-bold text-base sm:text-xl tracking-wide">OAKTREE ACADEMY</span>
           </Link>
         </div>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center space-x-6">
-          {Object.entries(navigationItems).map(([key, value]) => (
-            <div key={key} className="relative">
-              {'items' in value ? (
-                <>
-                  <button
-                    onClick={() => handleDropdownToggle(key)}
-                    className="flex items-center hover:text-blue-600 transition text-sm"
-                  >
+        <div className="hidden md:flex flex-1 justify-center">
+          <ul className="flex space-x-6 lg:space-x-8 font-medium text-base items-center">
+            {Object.entries(navigationItems).map(([key, value]) => (
+              <li key={key} className="relative group">
+                {'items' in value ? (
+                  <>
+                    <button
+                      onClick={() => handleDropdownToggle(key)}
+                      className="flex items-center hover:text-blue-600 transition"
+                    >
+                      {value.label}
+                      <HiChevronDown className={`ml-1 w-4 h-4 transition-transform duration-200 ${activeDropdown === key ? 'rotate-180' : ''}`} />
+                    </button>
+                    <AnimatePresence>
+                      {activeDropdown === key && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 10 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          className="absolute left-1/2 -translate-x-1/2 mt-2 w-56 bg-white rounded-lg shadow-xl py-2 z-50 border"
+                        >
+                          {value.items.map(item => (
+                            <Link key={item.href} href={item.href} className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">
+                              {item.label}
+                            </Link>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </>
+                ) : (
+                  <Link href={value.href} className="hover:text-blue-600 transition">
                     {value.label}
-                    <HiChevronDown className={`ml-1 w-3 h-3 transition-transform duration-200 ${activeDropdown === key ? 'rotate-180' : ''}`} />
-                  </button>
-                  <AnimatePresence>
-                    {activeDropdown === key && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 10 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className="absolute left-1/2 -translate-x-1/2 mt-2 w-56 bg-white rounded-lg shadow-xl py-2 z-50 border"
-                      >
-                        {value.items.map(item => (
-                          <Link key={item.href} href={item.href} className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">
-                            {item.label}
-                          </Link>
-                        ))}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </>
-              ) : (
-                <Link href={value.href} className="hover:text-blue-600 transition text-sm">
-                  {value.label}
-                </Link>
-              )}
-            </div>
-          ))}
+                  </Link>
+                )}
+              </li>
+            ))}
+          </ul>
         </div>
 
         {/* Mobile Menu Button */}
-        <div className="md:hidden">
+        <div className="md:hidden flex items-center">
           <button 
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
-            className="p-1 text-gray-600 hover:text-gray-900 focus:outline-none"
+            className="text-gray-600 hover:text-gray-900 focus:outline-none p-1"
           >
-            {isMobileMenuOpen ? <HiX size={20} /> : <HiMenu size={20} />}
+            {isMobileMenuOpen ? <HiX size={24} /> : <HiMenu size={24} />}
           </button>
         </div>
       </nav>
@@ -170,14 +172,14 @@ export default function Navbar() {
             transition={{ duration: 0.3, ease: "easeInOut" }}
             className="md:hidden bg-white border-t border-gray-200 shadow-lg overflow-hidden"
           >
-            <div className="px-3 py-2 space-y-1">
+            <div className="px-4 py-3 space-y-2">
               {Object.entries(navigationItems).map(([key, value]) => (
                 <div key={key}>
                   {'items' in value ? (
                     <>
                       <button 
                         onClick={() => handleDropdownToggle(key)} 
-                        className="w-full text-left py-2 px-2 font-medium text-sm flex justify-between items-center hover:bg-gray-50 rounded"
+                        className="w-full text-left py-2 px-2 font-semibold text-base flex justify-between items-center hover:bg-gray-50 rounded"
                       >
                         {value.label}
                         <HiChevronDown className={`transition-transform ${activeDropdown === key ? 'rotate-180' : ''}`} />
@@ -188,13 +190,13 @@ export default function Navbar() {
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
-                            className="ml-4 space-y-1"
+                            className="ml-4 mt-2 space-y-2"
                           >
                             {value.items.map(item => (
                               <Link 
                                 key={item.href} 
                                 href={item.href} 
-                                className="block py-1 px-2 text-xs text-gray-600 hover:bg-gray-50 rounded"
+                                className="block py-1 px-2 text-sm text-gray-600 hover:bg-gray-50 rounded"
                               >
                                 {item.label}
                               </Link>
@@ -206,7 +208,7 @@ export default function Navbar() {
                   ) : (
                     <Link 
                       href={value.href} 
-                      className="block py-2 px-2 font-medium text-sm hover:bg-gray-50 rounded"
+                      className="block py-2 px-2 font-semibold text-base hover:bg-gray-50 rounded"
                     >
                       {value.label}
                     </Link>

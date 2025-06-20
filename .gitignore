@@ -94,3 +94,6 @@ jspm_packages/
 
 # Other
 *.pem
+
+# Local Netlify folder
+.netlify
