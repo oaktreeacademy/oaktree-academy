@@ -171,7 +171,7 @@ export default function Navbar() {
               <ul className="flex flex-col space-y-4">
                 {Object.entries(navigationItems).map(([key, value]) => (
                   <li key={key}>
-                    {value.items ? (
+                    {'items' in value ? (
                       <>
                         <button onClick={() => handleDropdownToggle(key)} className="w-full flex justify-between items-center py-2 font-semibold text-lg">
                           {value.label}
