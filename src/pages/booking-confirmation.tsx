@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useStripe } from '@stripe/react-stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+import type { PaymentIntent } from '@stripe/stripe-js';
 import Navbar from '../components/Navbar';
 import Receipt from '../components/Receipt';
 
@@ -35,7 +36,7 @@ function BookingConfirmationContent() {
                   method: 'PUT',
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
-                    bookingId: paymentIntent.metadata.bookingId,
+                    bookingId: (paymentIntent as any).metadata?.bookingId,
                     paymentStatus: 'Paid',
                   }),
                 });
