@@ -4,6 +4,7 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@500&family=Lato:wght@500&family=Lora&family=Merriweather:wght@700&family=Open+Sans&family=Playfair+Display:wght@700&family=Roboto:ital,wght@0,300;1,300&display=swap" rel="stylesheet" />
