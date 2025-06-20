@@ -93,7 +93,7 @@ const businessServices = [
     title: 'Branding & Positioning Analysis',
     duration: '1 hr',
     price: '£19.99',
-    image: '/assets/health-safety.jpg',
+    image: '/assets/branding-analysis.jpg',
     description: 'Comprehensive analysis of your brand positioning and recommendations for improvement.'
   },
   {
