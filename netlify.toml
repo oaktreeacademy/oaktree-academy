@@ -9,8 +9,4 @@
   package = "@netlify/plugin-nextjs"
 
 [build.processing]
-  skip_processing = false
-
-# Database migration hook
-[[plugins]]
-  package = "netlify-plugin-prisma" 
+  skip_processing = false 
