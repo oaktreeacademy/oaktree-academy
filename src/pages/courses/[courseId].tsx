@@ -104,10 +104,6 @@ export default function CoursePage() {
     setCurrentImageIndex((prev) => (prev - 1 + course.images.length) % course.images.length);
   };
 
-  const removeFromCart = (courseId: number) => {
-    setCartItems(cartItems.filter(item => item.id !== courseId));
-  };
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
