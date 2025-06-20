@@ -6,7 +6,6 @@ import Link from 'next/link';
 import CourseModal from '../components/CourseModal';
 import { motion, AnimatePresence } from 'framer-motion';
 import BookingModal from '../components/BookingModal';
-import { ChevronDownIcon, UserGroupIcon, DocumentSearchIcon, QuestionMarkCircleIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import CustomerReviews from '../components/CustomerReviews';
 import { FaArrowRight, FaShieldAlt, FaPhoneAlt, FaFacebook, FaInstagram, FaTiktok, FaYoutube, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
