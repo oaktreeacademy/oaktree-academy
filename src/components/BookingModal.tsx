@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { locations } from '../data/locations';
 import SimpleReceipt from './SimpleReceipt';
 import DirectBankReceipt from './DirectBankReceipt';
+import { XIcon } from '@heroicons/react/outline';
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -323,7 +324,6 @@ export default function BookingModal({ isOpen, onClose, course }: BookingModalPr
   if (!course) return null;
 
   return (
-    <>
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>
         <Transition.Child
@@ -335,11 +335,11 @@ export default function BookingModal({ isOpen, onClose, course }: BookingModalPr
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm" />
+          <div className="fixed inset-0 bg-black bg-opacity-60" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex min-h-full items-center justify-center p-4 text-center">
+          <div className="flex min-h-full items-center justify-center p-2 sm:p-4 text-center">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -349,517 +349,371 @@ export default function BookingModal({ isOpen, onClose, course }: BookingModalPr
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                <div className="flex justify-between items-start mb-6">
-                  <Dialog.Title as="h3" className="text-2xl font-bold text-[#1a365d]">
-                    Book {course.title}
+              <Dialog.Panel className="w-full max-w-4xl transform rounded-2xl bg-white text-left align-middle shadow-xl transition-all">
+                
+                {/* Header */}
+                <div className="relative bg-gray-50 rounded-t-2xl p-4 sm:p-6">
+                  <Dialog.Title as="h3" className="text-xl sm:text-2xl font-bold leading-6 text-gray-900">
+                    Book: <span className="text-blue-600">{course?.title}</span>
                   </Dialog.Title>
                   <button
+                    type="button"
+                    className="absolute top-3 right-3 rounded-full p-1 text-gray-400 hover:bg-gray-200 hover:text-gray-600 focus:outline-none"
                     onClick={onClose}
-                    className="text-gray-400 hover:text-gray-500 transition-colors"
                   >
-                    <span className="sr-only">Close</span>
-                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                    <XIcon className="h-6 w-6" aria-hidden="true" />
                   </button>
                 </div>
 
-                <div className="flex gap-6 mb-8">
-                  {course.image && (
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      className="relative w-48 h-48 rounded-lg overflow-hidden shadow-lg"
-                    >
-                      <Image
-                        src={course.image}
-                        alt={course.title}
-                        fill
-                        className="object-cover"
-                      />
-                    </motion.div>
-                  )}
-                  <div className="flex-1">
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="bg-gray-50 p-4 rounded-lg mb-4"
-                    >
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-gray-600 font-medium">Duration:</span>
-                        <span className="font-bold text-[#1a365d] text-lg">7 Days</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-600 font-medium">Price:</span>
-                        <span className="font-bold text-[#1a365d] text-lg">{course.price}</span>
-                      </div>
-                      <div className="flex justify-between items-center mt-2">
-                        <span className="text-gray-600 font-medium">Schedule:</span>
-                        <span className="font-bold text-[#1a365d] text-sm">Mon-Fri, 9:00 AM - 5:00 PM</span>
-                      </div>
-                    </motion.div>
-                    {course.description && (
-                      <p className="text-gray-600 text-sm">{course.description}</p>
-                    )}
+                <div className="p-4 sm:p-6">
+                  {/* Stepper */}
+                  <div className="mb-6">
+                    <div className="flex items-center justify-center">
+                      {steps.map((step, index) => (
+                        <Fragment key={step.id}>
+                          <div className="flex flex-col items-center">
+                            <div
+                              className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-bold text-lg ${
+                                currentStep >= index
+                                  ? 'bg-blue-600 text-white'
+                                  : 'bg-gray-200 text-gray-500'
+                              }`}
+                            >
+                              {step.id}
+                            </div>
+                            <p className={`mt-2 text-xs sm:text-sm font-medium ${currentStep >= index ? 'text-blue-600' : 'text-gray-500'}`}>
+                              {step.title}
+                            </p>
+                          </div>
+                          {index < steps.length - 1 && (
+                            <div className={`flex-auto border-t-2 mx-2 sm:mx-4 transition-colors duration-500 ${currentStep > index ? 'border-blue-600' : 'border-gray-200'}`}></div>
+                          )}
+                        </Fragment>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Form Content */}
+                  <div className="min-h-[450px]">
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={currentStep}
+                        initial={{ opacity: 0, x: 50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -50 }}
+                        transition={{ duration: 0.3, ease: 'easeInOut' }}
+                      >
+                        {currentStep === 0 && (
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                            {/* Course Details */}
+                            <div className="space-y-4">
+                              <div className="relative w-full h-48 rounded-lg overflow-hidden shadow-sm">
+                                <Image 
+                                  src={course?.image || '/assets/default-course.jpg'} 
+                                  alt={course?.title || 'Course image'} 
+                                  layout="fill" 
+                                  objectFit="cover"
+                                  sizes="(max-width: 768px) 100vw, 50vw"
+                                />
+                              </div>
+                              <div className="text-sm text-gray-600">
+                                <p><strong>Duration:</strong> {course?.duration}</p>
+                                <p><strong>Price:</strong> <span className="font-bold text-blue-600">{course?.price}</span></p>
+                                {course?.description && <p className="mt-2">{course.description}</p>}
+                              </div>
+                            </div>
+                            
+                            {/* Personal Info Form */}
+                            <div className="space-y-4">
+                              <div>
+                                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">First Name *</label>
+                                <input type="text" id="firstName" value={formData.firstName} onChange={(e) => setFormData({ ...formData, firstName: e.target.value })} className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${errors.firstName ? 'border-red-500' : ''}`} />
+                                {errors.firstName && <p className="mt-1 text-xs text-red-500">{errors.firstName}</p>}
+                              </div>
+                              <div>
+                                <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">Last Name *</label>
+                                <input type="text" id="lastName" value={formData.lastName} onChange={(e) => setFormData({ ...formData, lastName: e.target.value })} className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${errors.lastName ? 'border-red-500' : ''}`} />
+                                {errors.lastName && <p className="mt-1 text-xs text-red-500">{errors.lastName}</p>}
+                              </div>
+                              <div>
+                                <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email Address *</label>
+                                <input type="email" id="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${errors.email ? 'border-red-500' : ''}`} />
+                                {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
+                              </div>
+                              <div>
+                                <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone Number *</label>
+                                <input type="tel" id="phone" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${errors.phone ? 'border-red-500' : ''}`} />
+                                {errors.phone && <p className="mt-1 text-xs text-red-500">{errors.phone}</p>}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                        
+                        {currentStep === 1 && (
+                          <div className="space-y-6">
+                            <h4 className="text-lg font-semibold text-gray-900 mb-4">Schedule Your Training</h4>
+                            
+                            {/* Course Duration Info */}
+                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                              <div className="flex items-center space-x-2 mb-2">
+                                <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span className="font-semibold text-blue-900">Course Schedule</span>
+                              </div>
+                              <p className="text-blue-800 text-sm">
+                                This course runs for <strong>7 consecutive days</strong> (Monday to Sunday), 
+                                from <strong>9:00 AM to 5:00 PM</strong> each day.
+                              </p>
+                            </div>
+
+                            <div className="grid grid-cols-1 gap-6">
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                  Course Start Date (Mondays Only) *
+                                </label>
+                                <select
+                                  value={formData.date}
+                                  onChange={(e) => setFormData({...formData, date: e.target.value})}
+                                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                                    errors.date ? 'border-red-500' : 'border-gray-300'
+                                  }`}
+                                >
+                                  <option value="">Select a Monday start date</option>
+                                  {mondayDates.map((date) => (
+                                    <option key={date.value} value={date.value}>
+                                      {date.label}
+                                    </option>
+                                  ))}
+                                </select>
+                                {errors.date && (
+                                  <p className="text-red-500 text-sm mt-1">{errors.date}</p>
+                                )}
+                                {formData.date && courseEndDate && (
+                                  <p className="text-green-600 text-sm mt-2">
+                                    <strong>Course ends:</strong> {courseEndDate}
+                                  </p>
+                                )}
+                              </div>
+
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                  Daily Training Hours *
+                                </label>
+                                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex items-center space-x-3">
+                                      <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                      </svg>
+                                      <span className="font-medium text-gray-900">9:00 AM - 5:00 PM</span>
+                                    </div>
+                                    <span className="text-sm text-gray-500">Fixed Schedule</span>
+                                  </div>
+                                  <p className="text-sm text-gray-600 mt-2">
+                                    All SIA courses follow this standard schedule with 1-hour lunch break included.
+                                  </p>
+                                </div>
+                                <input
+                                  type="hidden"
+                                  value={formData.time}
+                                  onChange={(e) => setFormData({...formData, time: e.target.value})}
+                                />
+                              </div>
+
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                  Training Location *
+                                </label>
+                                <select
+                                  value={formData.location}
+                                  onChange={(e) => setFormData({...formData, location: e.target.value})}
+                                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                                    errors.location ? 'border-red-500' : 'border-gray-300'
+                                  }`}
+                                >
+                                  <option value="">Select a location</option>
+                                  {locations.map((location) => (
+                                    <option key={location} value={location}>
+                                      {location}
+                                    </option>
+                                  ))}
+                                </select>
+                                {errors.location && (
+                                  <p className="text-red-500 text-sm mt-1">{errors.location}</p>
+                                )}
+                              </div>
+
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                  Additional Notes
+                                </label>
+                                <textarea
+                                  value={formData.notes}
+                                  onChange={(e) => setFormData({...formData, notes: e.target.value})}
+                                  rows={3}
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                  placeholder="Any special requirements, accessibility needs, or questions..."
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {currentStep === 2 && (
+                          <div className="space-y-6">
+                            <div className="text-center mb-8">
+                              <h4 className="text-2xl font-bold text-gray-900 mb-2">Choose Payment Method</h4>
+                              <p className="text-gray-600">Select your preferred payment option</p>
+                            </div>
+
+                            {/* Payment Method Cards */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                              {paymentMethods.map((method) => (
+                                <motion.div
+                                  key={method.id}
+                                  whileHover={{ scale: 1.02 }}
+                                  whileTap={{ scale: 0.98 }}
+                                  onClick={() => setFormData({...formData, paymentMethod: method.id})}
+                                  className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
+                                    formData.paymentMethod === method.id 
+                                      ? method.selectedColor 
+                                      : method.color
+                                  }`}
+                                >
+                                  <div className="flex items-center space-x-3">
+                                    <div className="text-2xl">{method.icon}</div>
+                                    <div className="flex-1">
+                                      <h5 className="font-semibold text-gray-900">{method.name}</h5>
+                                      <p className="text-sm text-gray-600">{method.description}</p>
+                                    </div>
+                                    <div className={`w-5 h-5 rounded-full border-2 ${
+                                      formData.paymentMethod === method.id 
+                                        ? 'bg-blue-600 border-blue-600' 
+                                        : 'border-gray-300'
+                                    }`}>
+                                      {formData.paymentMethod === method.id && (
+                                        <div className="w-full h-full rounded-full bg-blue-600 flex items-center justify-center">
+                                          <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                          </svg>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                </motion.div>
+                              ))}
+                            </div>
+
+                            {errors.paymentMethod && (
+                              <p className="text-red-500 text-sm text-center">{errors.paymentMethod}</p>
+                            )}
+
+                            {/* Payment Details Based on Selection */}
+                            {formData.paymentMethod === 'bank' && (
+                              <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="bg-white p-6 rounded-xl border border-gray-200"
+                              >
+                                <h5 className="font-semibold text-gray-900 mb-4 flex items-center">
+                                  <span className="text-2xl mr-2">🏦</span>
+                                  Bank Transfer Details
+                                </h5>
+                                <div className="space-y-4">
+                                  <div className="bg-green-50 p-4 rounded-lg">
+                                    <h6 className="font-semibold text-green-900 mb-2">Bank Account Details:</h6>
+                                    <div className="space-y-2 text-sm">
+                                      <div><span className="font-medium">Account Name:</span> OAKTREE ACADEMY</div>
+                                      <div><span className="font-medium">Account Number:</span> 2931 9203 9201</div>
+                                      <div><span className="font-medium">Sort Code:</span> 12-32-42</div>
+                                      <div><span className="font-medium">Bank:</span> HSBC</div>
+                                      <div><span className="font-medium">Reference:</span> {formData.firstName} {formData.lastName}</div>
+                                      <div><span className="font-medium">Amount:</span> {course.price}</div>
+                                    </div>
+                                  </div>
+                                  <div className="bg-yellow-50 p-4 rounded-lg">
+                                    <p className="text-yellow-800 text-sm">
+                                      <strong>Important:</strong> After submitting your booking, you'll receive an email with payment instructions. Please complete the bank transfer and include your name as the reference.
+                                    </p>
+                                  </div>
+                                </div>
+                              </motion.div>
+                            )}
+
+                            {formData.paymentMethod === 'qr' && (
+                              <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="bg-white p-6 rounded-xl border border-gray-200 text-center"
+                              >
+                                <h5 className="font-semibold text-gray-900 mb-4 flex items-center justify-center">
+                                  <span className="text-2xl mr-2">📱</span>
+                                  QR Code Payment
+                                </h5>
+                                <div className="bg-gray-100 p-8 rounded-lg mb-4">
+                                  <div className="w-48 h-48 mx-auto bg-white rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center">
+                                    <div className="text-center">
+                                      <div className="text-4xl mb-2">📱</div>
+                                      <p className="text-sm text-gray-600">QR Code</p>
+                                      <p className="text-xs text-gray-500">Scan to pay</p>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="space-y-3 text-sm">
+                                  <p className="text-gray-600">
+                                    Scan the QR code with your mobile banking app to complete payment
+                                  </p>
+                                  <div className="bg-blue-50 p-3 rounded-lg">
+                                    <p className="text-blue-800">
+                                      <strong>Amount:</strong> {course.price}
+                                    </p>
+                                  </div>
+                                </div>
+                              </motion.div>
+                            )}
+                          </div>
+                        )}
+                      </motion.div>
+                    </AnimatePresence>
                   </div>
                 </div>
 
-                {/* Progress Steps */}
-                <div className="flex items-center justify-between mb-8">
-                  {steps.map((step, index) => (
-                    <div key={step.id} className="flex items-center">
-                      <div className={`flex items-center justify-center w-8 h-8 rounded-full border-2 ${
-                        index <= currentStep 
-                          ? 'bg-blue-600 border-blue-600 text-white' 
-                          : 'border-gray-300 text-gray-500'
-                      }`}>
-                        {index < currentStep ? (
-                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                          </svg>
-                        ) : (
-                          <span className="text-sm font-medium">{step.id}</span>
-                        )}
-                      </div>
-                      <span className={`ml-2 text-sm font-medium ${
-                        index <= currentStep ? 'text-blue-600' : 'text-gray-500'
-                      }`}>
-                        {step.title}
-                      </span>
-                      {index < steps.length - 1 && (
-                        <div className={`w-12 h-0.5 mx-4 ${
-                          index < currentStep ? 'bg-blue-600' : 'bg-gray-300'
-                        }`} />
-                      )}
-                    </div>
-                  ))}
-                </div>
-
-                {/* Form Content */}
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={currentStep}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    {currentStep === 0 && (
-                      <div className="space-y-4">
-                        <h4 className="text-lg font-semibold text-gray-900 mb-4">Personal Information</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              First Name *
-                            </label>
-                            <input
-                              type="text"
-                              value={formData.firstName}
-                              onChange={(e) => setFormData({...formData, firstName: e.target.value})}
-                              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                                errors.firstName ? 'border-red-500' : 'border-gray-300'
-                              }`}
-                            />
-                            {errors.firstName && (
-                              <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>
-                            )}
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Last Name *
-                            </label>
-                            <input
-                              type="text"
-                              value={formData.lastName}
-                              onChange={(e) => setFormData({...formData, lastName: e.target.value})}
-                              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                                errors.lastName ? 'border-red-500' : 'border-gray-300'
-                              }`}
-                            />
-                            {errors.lastName && (
-                              <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>
-                            )}
-                          </div>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Email Address *
-                          </label>
-                          <input
-                            type="email"
-                            value={formData.email}
-                            onChange={(e) => setFormData({...formData, email: e.target.value})}
-                            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                              errors.email ? 'border-red-500' : 'border-gray-300'
-                            }`}
-                          />
-                          {errors.email && (
-                            <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-                          )}
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Phone Number *
-                          </label>
-                          <input
-                            type="tel"
-                            value={formData.phone}
-                            onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                              errors.phone ? 'border-red-500' : 'border-gray-300'
-                            }`}
-                          />
-                          {errors.phone && (
-                            <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    {currentStep === 1 && (
-                      <div className="space-y-6">
-                        <h4 className="text-lg font-semibold text-gray-900 mb-4">Schedule Your Training</h4>
-                        
-                        {/* Course Duration Info */}
-                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                          <div className="flex items-center space-x-2 mb-2">
-                            <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <span className="font-semibold text-blue-900">Course Schedule</span>
-                          </div>
-                          <p className="text-blue-800 text-sm">
-                            This course runs for <strong>7 consecutive days</strong> (Monday to Sunday), 
-                            from <strong>9:00 AM to 5:00 PM</strong> each day.
-                          </p>
-                        </div>
-
-                        <div className="grid grid-cols-1 gap-6">
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Course Start Date (Mondays Only) *
-                            </label>
-                            <select
-                              value={formData.date}
-                              onChange={(e) => setFormData({...formData, date: e.target.value})}
-                              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                                errors.date ? 'border-red-500' : 'border-gray-300'
-                              }`}
-                            >
-                              <option value="">Select a Monday start date</option>
-                              {mondayDates.map((date) => (
-                                <option key={date.value} value={date.value}>
-                                  {date.label}
-                                </option>
-                              ))}
-                            </select>
-                            {errors.date && (
-                              <p className="text-red-500 text-sm mt-1">{errors.date}</p>
-                            )}
-                            {formData.date && courseEndDate && (
-                              <p className="text-green-600 text-sm mt-2">
-                                <strong>Course ends:</strong> {courseEndDate}
-                              </p>
-                            )}
-                          </div>
-
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Daily Training Hours *
-                            </label>
-                            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center space-x-3">
-                                  <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                  </svg>
-                                  <span className="font-medium text-gray-900">9:00 AM - 5:00 PM</span>
-                                </div>
-                                <span className="text-sm text-gray-500">Fixed Schedule</span>
-                              </div>
-                              <p className="text-sm text-gray-600 mt-2">
-                                All SIA courses follow this standard schedule with 1-hour lunch break included.
-                              </p>
-                            </div>
-                            <input
-                              type="hidden"
-                              value={formData.time}
-                              onChange={(e) => setFormData({...formData, time: e.target.value})}
-                            />
-                          </div>
-
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Training Location *
-                            </label>
-                            <select
-                              value={formData.location}
-                              onChange={(e) => setFormData({...formData, location: e.target.value})}
-                              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                                errors.location ? 'border-red-500' : 'border-gray-300'
-                              }`}
-                            >
-                              <option value="">Select a location</option>
-                              {locations.map((location) => (
-                                <option key={location} value={location}>
-                                  {location}
-                                </option>
-                              ))}
-                            </select>
-                            {errors.location && (
-                              <p className="text-red-500 text-sm mt-1">{errors.location}</p>
-                            )}
-                          </div>
-
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Additional Notes
-                            </label>
-                            <textarea
-                              value={formData.notes}
-                              onChange={(e) => setFormData({...formData, notes: e.target.value})}
-                              rows={3}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="Any special requirements, accessibility needs, or questions..."
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {currentStep === 2 && (
-                      <div className="space-y-6">
-                        <div className="text-center mb-8">
-                          <h4 className="text-2xl font-bold text-gray-900 mb-2">Choose Payment Method</h4>
-                          <p className="text-gray-600">Select your preferred payment option</p>
-                        </div>
-
-                        {/* Payment Method Cards */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                          {paymentMethods.map((method) => (
-                            <motion.div
-                              key={method.id}
-                              whileHover={{ scale: 1.02 }}
-                              whileTap={{ scale: 0.98 }}
-                              onClick={() => setFormData({...formData, paymentMethod: method.id})}
-                              className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
-                                formData.paymentMethod === method.id 
-                                  ? method.selectedColor 
-                                  : method.color
-                              }`}
-                            >
-                              <div className="flex items-center space-x-3">
-                                <div className="text-2xl">{method.icon}</div>
-                                <div className="flex-1">
-                                  <h5 className="font-semibold text-gray-900">{method.name}</h5>
-                                  <p className="text-sm text-gray-600">{method.description}</p>
-                                </div>
-                                <div className={`w-5 h-5 rounded-full border-2 ${
-                                  formData.paymentMethod === method.id 
-                                    ? 'bg-blue-600 border-blue-600' 
-                                    : 'border-gray-300'
-                                }`}>
-                                  {formData.paymentMethod === method.id && (
-                                    <div className="w-full h-full rounded-full bg-blue-600 flex items-center justify-center">
-                                      <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                      </svg>
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            </motion.div>
-                          ))}
-                        </div>
-
-                        {errors.paymentMethod && (
-                          <p className="text-red-500 text-sm text-center">{errors.paymentMethod}</p>
-                        )}
-
-                        {/* Payment Details Based on Selection */}
-                        {formData.paymentMethod === 'bank' && (
-                          <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="bg-white p-6 rounded-xl border border-gray-200"
-                          >
-                            <h5 className="font-semibold text-gray-900 mb-4 flex items-center">
-                              <span className="text-2xl mr-2">🏦</span>
-                              Bank Transfer Details
-                            </h5>
-                            <div className="space-y-4">
-                              <div className="bg-green-50 p-4 rounded-lg">
-                                <h6 className="font-semibold text-green-900 mb-2">Bank Account Details:</h6>
-                                <div className="space-y-2 text-sm">
-                                  <div><span className="font-medium">Account Name:</span> OAKTREE ACADEMY</div>
-                                  <div><span className="font-medium">Account Number:</span> 2931 9203 9201</div>
-                                  <div><span className="font-medium">Sort Code:</span> 12-32-42</div>
-                                  <div><span className="font-medium">Bank:</span> HSBC</div>
-                                  <div><span className="font-medium">Reference:</span> {formData.firstName} {formData.lastName}</div>
-                                  <div><span className="font-medium">Amount:</span> {course.price}</div>
-                                </div>
-                              </div>
-                              <div className="bg-yellow-50 p-4 rounded-lg">
-                                <p className="text-yellow-800 text-sm">
-                                  <strong>Important:</strong> After submitting your booking, you'll receive an email with payment instructions. Please complete the bank transfer and include your name as the reference.
-                                </p>
-                              </div>
-                            </div>
-                          </motion.div>
-                        )}
-
-                        {formData.paymentMethod === 'qr' && (
-                          <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="bg-white p-6 rounded-xl border border-gray-200 text-center"
-                          >
-                            <h5 className="font-semibold text-gray-900 mb-4 flex items-center justify-center">
-                              <span className="text-2xl mr-2">📱</span>
-                              QR Code Payment
-                            </h5>
-                            <div className="bg-gray-100 p-8 rounded-lg mb-4">
-                              <div className="w-48 h-48 mx-auto bg-white rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center">
-                                <div className="text-center">
-                                  <div className="text-4xl mb-2">📱</div>
-                                  <p className="text-sm text-gray-600">QR Code</p>
-                                  <p className="text-xs text-gray-500">Scan to pay</p>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="space-y-3 text-sm">
-                              <p className="text-gray-600">
-                                Scan the QR code with your mobile banking app to complete payment
-                              </p>
-                              <div className="bg-blue-50 p-3 rounded-lg">
-                                <p className="text-blue-800">
-                                  <strong>Amount:</strong> {course.price}
-                                </p>
-                              </div>
-                            </div>
-                          </motion.div>
-                        )}
-                      </div>
-                    )}
-                  </motion.div>
-                </AnimatePresence>
-
-                {/* Navigation Buttons */}
-                <div className="flex justify-between mt-8">
+                {/* Footer with Navigation */}
+                <div className="bg-gray-50 rounded-b-2xl px-4 py-3 sm:px-6 flex justify-between items-center">
                   <button
+                    type="button"
                     onClick={handlePrev}
-                    disabled={currentStep === 0}
-                    className={`px-6 py-2 rounded-lg font-medium transition-colors ${
-                      currentStep === 0
-                        ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                    }`}
+                    disabled={currentStep === 0 || isTransitioning}
+                    className="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
                   >
-                    Previous
+                    Back
                   </button>
-                  
                   {currentStep < steps.length - 1 ? (
                     <button
+                      type="button"
                       onClick={handleNext}
                       disabled={isTransitioning}
-                      className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
                     >
-                      {isTransitioning ? 'Processing...' : 'Next'}
+                      Next
                     </button>
                   ) : (
                     <button
+                      type="submit"
                       onClick={handleSubmit}
                       disabled={isSubmitting}
-                      className="bg-green-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-green-700 transition-colors disabled:opacity-50"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50"
                     >
-                      {isSubmitting ? 'Processing...' : 'Complete Booking'}
+                      {isSubmitting ? 'Submitting...' : 'Confirm Booking'}
                     </button>
                   )}
                 </div>
-
-                {/* Success Message */}
-                <AnimatePresence>
-                  {showSuccess && (
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.9 }}
-                      className="absolute inset-0 bg-white rounded-2xl flex items-center justify-center"
-                    >
-                      <div className="text-center p-6">
-                        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                          <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                          </svg>
-                        </div>
-                        <h3 className="text-xl font-bold text-gray-900 mb-2">Booking Successful!</h3>
-                        <p className="text-gray-600 mb-4">Your booking has been created successfully.</p>
-                        
-                        <div className="bg-blue-50 p-4 rounded-lg mb-4">
-                          <h4 className="font-semibold text-blue-900 mb-2">📱 WhatsApp Confirmation Required</h4>
-                          <p className="text-blue-800 text-sm mb-3">
-                            Please send your receipt to WhatsApp for payment confirmation:
-                          </p>
-                          <a 
-                            href="https://wa.me/443301759933?text=Hi, I've just booked a course and need to confirm my payment. Here's my receipt:"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors"
-                          >
-                            <span className="mr-2">📱</span>
-                            Send to WhatsApp
-                          </a>
-                        </div>
-                        
-                        <p className="text-sm text-gray-500">
-                          Download your receipt below and send it to +44 330 175 9933
-                        </p>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
-                {/* Error Message */}
-                {submitError && (
-                  <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-                    <div className="flex">
-                      <div className="flex-shrink-0">
-                        <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                        </svg>
-                      </div>
-                      <div className="ml-3">
-                        <h3 className="text-sm font-medium text-red-800">Booking Failed</h3>
-                        <div className="mt-2 text-sm text-red-700">
-                          <p>{submitError}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
               </Dialog.Panel>
             </Transition.Child>
           </div>
         </div>
       </Dialog>
     </Transition>
-
-    {/* Receipt Modal */}
-    {showReceipt && completedBooking && (
-      formData.paymentMethod === 'direct-bank' ? (
-        <DirectBankReceipt 
-          booking={completedBooking} 
-          paymentIntentId={paymentIntentId}
-          onClose={() => setShowReceipt(false)} 
-        />
-      ) : (
-        <SimpleReceipt 
-          booking={completedBooking} 
-          onClose={() => setShowReceipt(false)} 
-        />
-      )
-    )}
-  </>
   );
 } 
