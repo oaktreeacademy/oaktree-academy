@@ -163,32 +163,32 @@ export default function CustomerReviews() {
       />
       
       <div className="w-full max-w-5xl flex flex-col items-center relative z-10">
-        <div className="flex flex-col items-center mb-8">
+        <div className="flex flex-col items-center mb-8 px-4">
           <div className="flex items-center mb-4">
             <span className="inline-block mr-3"><img src="/assets/googlelogo.png" alt="Google" width={48} height={48} /></span>
-            <span className="text-4xl font-extrabold text-[#1a365d] tracking-tight">Google Reviews</span>
+            <span className="text-3xl md:text-4xl font-extrabold text-[#1a365d] tracking-tight text-center">Google Reviews</span>
           </div>
-          <span className="text-gray-600 text-xl font-medium">What our customers say</span>
+          <span className="text-gray-600 text-lg md:text-xl font-medium text-center">What our customers say</span>
         </div>
-        {/* Single Masonry Grid */}
-        <div className="grid grid-cols-3 grid-rows-2 gap-6 w-full" style={{ gridTemplateRows: '1fr 1fr', gridTemplateColumns: '2fr 1fr 1fr' }}>
-          {/* A: Large card, spans 2 columns */}
+        {/* Responsive Masonry Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 md:grid-rows-2 gap-6 w-full px-4">
+          {/* A: Large card */}
           <motion.div
-            initial={{ opacity: 0, y: 30, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.5, type: 'spring' }}
-            className="col-span-2 row-span-1 bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center justify-center hover:shadow-2xl transition-all"
+            className="md:col-span-2 md:row-span-1 bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center justify-center hover:shadow-2xl transition-all"
           >
             <span className="font-bold text-lg text-blue-900 mb-1 text-center">{batch[0]?.name}</span>
             <div className="flex items-center mb-3 justify-center">{[...Array(batch[0]?.rating)].map((_, i) => <FaStar key={i} className="text-yellow-400 text-base" />)}</div>
             <blockquote className="text-gray-700 text-lg leading-relaxed italic text-center">"{batch[0]?.text}"</blockquote>
           </motion.div>
-          {/* B: Tall card, spans 2 rows */}
+          {/* B: Tall card */}
           <motion.div
-            initial={{ opacity: 0, x: 30, scale: 0.95 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.5, type: 'spring' }}
-            className="col-span-1 row-span-2 bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center justify-center hover:shadow-2xl transition-all"
+            className="md:col-span-1 md:row-span-2 bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center justify-center hover:shadow-2xl transition-all"
           >
             <span className="font-bold text-lg text-blue-900 mb-1 text-center">{batch[1]?.name}</span>
             <div className="flex items-center mb-3 justify-center">{[...Array(batch[1]?.rating)].map((_, i) => <FaStar key={i} className="text-yellow-400 text-base" />)}</div>
@@ -196,10 +196,10 @@ export default function CustomerReviews() {
           </motion.div>
           {/* C: Small card */}
           <motion.div
-            initial={{ opacity: 0, x: -30, scale: 0.95 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.5, type: 'spring' }}
-            className="col-span-1 row-span-1 bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center justify-center hover:shadow-2xl transition-all"
+            className="md:col-span-1 md:row-span-1 bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center justify-center hover:shadow-2xl transition-all"
           >
             <span className="font-bold text-base text-blue-900 mb-1 text-center">{batch[2]?.name}</span>
             <div className="flex items-center mb-2 justify-center">{[...Array(batch[2]?.rating)].map((_, i) => <FaStar key={i} className="text-yellow-400 text-sm" />)}</div>
@@ -207,10 +207,10 @@ export default function CustomerReviews() {
           </motion.div>
           {/* D: Small card */}
           <motion.div
-            initial={{ opacity: 0, y: 30, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.5, type: 'spring' }}
-            className="col-span-1 row-span-1 bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center justify-center hover:shadow-2xl transition-all"
+            className="md:col-span-1 md:row-span-1 bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center justify-center hover:shadow-2xl transition-all"
           >
             <span className="font-bold text-base text-blue-900 mb-1 text-center">{batch[3]?.name}</span>
             <div className="flex items-center mb-2 justify-center">{[...Array(batch[3]?.rating)].map((_, i) => <FaStar key={i} className="text-yellow-400 text-sm" />)}</div>
