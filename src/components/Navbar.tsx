@@ -99,28 +99,29 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="relative bg-white text-[#232328] px-4 sm:px-6 py-3 flex items-center justify-between shadow-md sticky top-0 z-50 max-w-full" ref={dropdownRef}>
-      {/* Left: Logo */}
-      <div className="flex items-center flex-shrink-0 min-w-0">
-        <Link href="/" className="flex items-center space-x-2 min-w-0">
-          <Image src="/assets/logo.png" alt="Oaktree Academy Logo" width={32} height={32} className="rounded-full h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0" />
-          <span className="font-bold text-sm sm:text-xl tracking-wide truncate">OAKTREE ACADEMY</span>
-        </Link>
-      </div>
+    <div className="relative" ref={dropdownRef}>
+      {/* Main Navbar */}
+      <nav className="bg-white text-[#232328] px-3 py-2 flex items-center justify-between shadow-md sticky top-0 z-50">
+        {/* Logo */}
+        <div className="flex items-center">
+          <Link href="/" className="flex items-center space-x-2">
+            <Image src="/assets/logo.png" alt="Oaktree Academy Logo" width={28} height={28} className="rounded-full h-7 w-7" />
+            <span className="font-bold text-sm hidden xs:block">OAKTREE</span>
+          </Link>
+        </div>
 
-      {/* Center: Desktop Menu */}
-      <div className="hidden md:flex flex-1 justify-center">
-        <ul className="flex space-x-6 lg:space-x-8 font-medium text-base items-center">
+        {/* Desktop Menu */}
+        <div className="hidden md:flex items-center space-x-6">
           {Object.entries(navigationItems).map(([key, value]) => (
-            <li key={key} className="relative group">
+            <div key={key} className="relative">
               {'items' in value ? (
                 <>
                   <button
                     onClick={() => handleDropdownToggle(key)}
-                    className="flex items-center hover:text-blue-600 transition"
+                    className="flex items-center hover:text-blue-600 transition text-sm"
                   >
                     {value.label}
-                    <HiChevronDown className={`ml-1 w-4 h-4 transition-transform duration-200 ${activeDropdown === key ? 'rotate-180' : ''}`} />
+                    <HiChevronDown className={`ml-1 w-3 h-3 transition-transform duration-200 ${activeDropdown === key ? 'rotate-180' : ''}`} />
                   </button>
                   <AnimatePresence>
                     {activeDropdown === key && (
@@ -140,64 +141,82 @@ export default function Navbar() {
                   </AnimatePresence>
                 </>
               ) : (
-                <Link href={value.href} className="hover:text-blue-600 transition">
+                <Link href={value.href} className="hover:text-blue-600 transition text-sm">
                   {value.label}
                 </Link>
               )}
-            </li>
+            </div>
           ))}
-        </ul>
-      </div>
+        </div>
 
-      {/* Right: Hamburger Menu Button */}
-      <div className="md:hidden flex items-center flex-shrink-0 ml-2">
-        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="text-gray-600 hover:text-gray-900 focus:outline-none p-1">
-          {isMobileMenuOpen ? <HiX size={24} /> : <HiMenu size={24} />}
-        </button>
-      </div>
+        {/* Mobile Menu Button */}
+        <div className="md:hidden">
+          <button 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
+            className="p-1 text-gray-600 hover:text-gray-900 focus:outline-none"
+          >
+            {isMobileMenuOpen ? <HiX size={20} /> : <HiMenu size={20} />}
+          </button>
+        </div>
+      </nav>
 
-      {/* Mobile Menu Panel */}
+      {/* Mobile Dropdown Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2, ease: "easeInOut" }}
-            className="absolute top-full left-0 right-0 bg-white shadow-lg z-40 md:hidden border-t"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="md:hidden bg-white border-t border-gray-200 shadow-lg overflow-hidden"
           >
-            <div className="p-4 overflow-y-auto max-h-[70vh]">
-              <ul className="flex flex-col space-y-3">
-                {Object.entries(navigationItems).map(([key, value]) => (
-                  <li key={key}>
-                    {'items' in value ? (
-                      <>
-                        <button onClick={() => handleDropdownToggle(key)} className="w-full flex justify-between items-center py-2 font-semibold text-base">
-                          {value.label}
-                          <HiChevronDown className={`transition-transform ${activeDropdown === key ? 'rotate-180' : ''}`} />
-                        </button>
+            <div className="px-3 py-2 space-y-1">
+              {Object.entries(navigationItems).map(([key, value]) => (
+                <div key={key}>
+                  {'items' in value ? (
+                    <>
+                      <button 
+                        onClick={() => handleDropdownToggle(key)} 
+                        className="w-full text-left py-2 px-2 font-medium text-sm flex justify-between items-center hover:bg-gray-50 rounded"
+                      >
+                        {value.label}
+                        <HiChevronDown className={`transition-transform ${activeDropdown === key ? 'rotate-180' : ''}`} />
+                      </button>
+                      <AnimatePresence>
                         {activeDropdown === key && (
-                          <div className="pl-4 mt-2 space-y-2">
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="ml-4 space-y-1"
+                          >
                             {value.items.map(item => (
-                              <Link key={item.href} href={item.href} className="block py-1 text-gray-600 text-sm">
+                              <Link 
+                                key={item.href} 
+                                href={item.href} 
+                                className="block py-1 px-2 text-xs text-gray-600 hover:bg-gray-50 rounded"
+                              >
                                 {item.label}
                               </Link>
                             ))}
-                          </div>
+                          </motion.div>
                         )}
-                      </>
-                    ) : (
-                      <Link href={value.href} className="block py-2 font-semibold text-base">
-                        {value.label}
-                      </Link>
-                    )}
-                  </li>
-                ))}
-              </ul>
+                      </AnimatePresence>
+                    </>
+                  ) : (
+                    <Link 
+                      href={value.href} 
+                      className="block py-2 px-2 font-medium text-sm hover:bg-gray-50 rounded"
+                    >
+                      {value.label}
+                    </Link>
+                  )}
+                </div>
+              ))}
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+    </div>
   );
 } 
