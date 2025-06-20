@@ -113,7 +113,7 @@ export default function Navbar() {
         <ul className="flex space-x-6 lg:space-x-8 font-medium text-base items-center">
           {Object.entries(navigationItems).map(([key, value]) => (
             <li key={key} className="relative group">
-              {value.items ? (
+              {'items' in value ? (
                 <>
                   <button
                     onClick={() => handleDropdownToggle(key)}
