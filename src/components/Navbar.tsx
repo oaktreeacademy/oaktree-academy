@@ -99,12 +99,12 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="relative bg-white text-[#232328] px-4 sm:px-6 py-3 flex items-center justify-between w-full shadow-md sticky top-0 z-50" ref={dropdownRef}>
+    <nav className="relative bg-white text-[#232328] px-4 sm:px-6 py-3 flex items-center justify-between shadow-md sticky top-0 z-50 max-w-full" ref={dropdownRef}>
       {/* Left: Logo */}
-      <div className="flex items-center flex-shrink-0">
-        <Link href="/" className="flex items-center space-x-2">
-          <Image src="/assets/logo.png" alt="Oaktree Academy Logo" width={32} height={32} className="rounded-full h-8 w-8 sm:h-10 sm:w-10" />
-          <span className="font-bold text-base sm:text-xl tracking-wide">OAKTREE ACADEMY</span>
+      <div className="flex items-center flex-shrink-0 min-w-0">
+        <Link href="/" className="flex items-center space-x-2 min-w-0">
+          <Image src="/assets/logo.png" alt="Oaktree Academy Logo" width={32} height={32} className="rounded-full h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0" />
+          <span className="font-bold text-sm sm:text-xl tracking-wide truncate">OAKTREE ACADEMY</span>
         </Link>
       </div>
 
@@ -150,9 +150,9 @@ export default function Navbar() {
       </div>
 
       {/* Right: Hamburger Menu Button */}
-      <div className="md:hidden flex items-center">
-        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="text-gray-600 hover:text-gray-900 focus:outline-none">
-          {isMobileMenuOpen ? <HiX size={28} /> : <HiMenu size={28} />}
+      <div className="md:hidden flex items-center flex-shrink-0 ml-2">
+        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="text-gray-600 hover:text-gray-900 focus:outline-none p-1">
+          {isMobileMenuOpen ? <HiX size={24} /> : <HiMenu size={24} />}
         </button>
       </div>
 
@@ -164,22 +164,22 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2, ease: "easeInOut" }}
-            className="absolute top-full left-0 right-0 w-full bg-white shadow-lg z-40 md:hidden"
+            className="absolute top-full left-0 right-0 bg-white shadow-lg z-40 md:hidden border-t"
           >
-            <div className="p-5 overflow-y-auto">
-              <ul className="flex flex-col space-y-4">
+            <div className="p-4 overflow-y-auto max-h-[70vh]">
+              <ul className="flex flex-col space-y-3">
                 {Object.entries(navigationItems).map(([key, value]) => (
                   <li key={key}>
                     {'items' in value ? (
                       <>
-                        <button onClick={() => handleDropdownToggle(key)} className="w-full flex justify-between items-center py-2 font-semibold text-lg">
+                        <button onClick={() => handleDropdownToggle(key)} className="w-full flex justify-between items-center py-2 font-semibold text-base">
                           {value.label}
                           <HiChevronDown className={`transition-transform ${activeDropdown === key ? 'rotate-180' : ''}`} />
                         </button>
                         {activeDropdown === key && (
                           <div className="pl-4 mt-2 space-y-2">
                             {value.items.map(item => (
-                              <Link key={item.href} href={item.href} className="block py-1 text-gray-600">
+                              <Link key={item.href} href={item.href} className="block py-1 text-gray-600 text-sm">
                                 {item.label}
                               </Link>
                             ))}
@@ -187,7 +187,7 @@ export default function Navbar() {
                         )}
                       </>
                     ) : (
-                      <Link href={value.href} className="block py-2 font-semibold text-lg">
+                      <Link href={value.href} className="block py-2 font-semibold text-base">
                         {value.label}
                       </Link>
                     )}
