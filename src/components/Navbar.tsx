@@ -99,7 +99,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-white text-[#232328] px-4 sm:px-6 py-3 flex items-center justify-between w-full shadow-md sticky top-0 z-50" ref={dropdownRef}>
+    <nav className="relative bg-white text-[#232328] px-4 sm:px-6 py-3 flex items-center justify-between w-full shadow-md sticky top-0 z-50" ref={dropdownRef}>
       {/* Left: Logo */}
       <div className="flex items-center flex-shrink-0">
         <Link href="/" className="flex items-center space-x-2">
@@ -160,14 +160,13 @@ export default function Navbar() {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="fixed top-0 right-0 h-full w-full max-w-sm bg-white shadow-lg z-40 md:hidden"
-            style={{ paddingTop: '64px' }} // Offset for navbar height
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+            className="absolute top-full left-0 right-0 w-full bg-white shadow-lg z-40 md:hidden"
           >
-            <div className="p-5 overflow-y-auto h-full">
+            <div className="p-5 overflow-y-auto">
               <ul className="flex flex-col space-y-4">
                 {Object.entries(navigationItems).map(([key, value]) => (
                   <li key={key}>
