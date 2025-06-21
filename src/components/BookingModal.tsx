@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { locations } from '../data/locations';
 import SimpleReceipt from './SimpleReceipt';
 import DirectBankReceipt from './DirectBankReceipt';
-import { XIcon } from '@heroicons/react/outline';
+import { XMarkIcon as XIcon } from '@heroicons/react/24/outline';
 
 interface BookingModalProps {
   isOpen: boolean;
